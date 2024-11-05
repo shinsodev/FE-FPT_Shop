@@ -1,0 +1,118 @@
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+// import "./App.css";
+
+import MainPage from "./pages/MainPage/MainPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
+import Dashboard from "./pages/Sidebar/Dashboard";
+import UserProfile from "./pages/Sidebar/UserProfile";
+import Report from "./pages/Sidebar/Report";
+import DiscountEvents from "./pages/Sidebar/DiscountEvents";
+import UserList from "./pages/Sidebar/UserList";
+import ProductList from "./pages/Sidebar/ProductList";
+import AdminPurchaseHistory from "./pages/Sidebar/AdminPurchaseHistory";
+import PurchaseHistory from "./pages/Sidebar/PurchaseHistory";
+import DashBoardLayout from "./components/Layout/DashBoardLayout";
+import ShoppingCart from "./pages/Sidebar/ShoppingCart";
+
+function App() {
+  return (
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <MainPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <DashBoardLayout>
+              <Dashboard />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/userlist"
+          element={
+            <DashBoardLayout>
+              <UserList />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/productlist"
+          element={
+            <DashBoardLayout>
+              <ProductList />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/purchasehistory"
+          element={
+            <DashBoardLayout>
+              <AdminPurchaseHistory />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/events"
+          element={
+            <DashBoardLayout>
+              <DiscountEvents />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/report"
+          element={
+            <DashBoardLayout>
+              <Report />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/shoppingcart"
+          element={
+            <DashBoardLayout>
+              <ShoppingCart />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/purchasehistory"
+          element={
+            <DashBoardLayout>
+              <PurchaseHistory />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <DashBoardLayout>
+              <UserProfile />
+            </DashBoardLayout>
+          }
+        />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
