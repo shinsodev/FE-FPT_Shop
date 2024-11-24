@@ -68,6 +68,13 @@ const Sidebar = () => {
                 <FiUser size={22} />
                 <span>All Users</span>
               </NavLink>
+              <NavLink
+                to="/admin/employee"
+                className={({ isActive }) => getNavLinkClass(isActive)}
+              >
+                <FiUser size={22} />
+                <span>All Employee</span>
+              </NavLink>
 
               <NavLink
                 to="/admin/productlist"

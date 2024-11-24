@@ -11,6 +11,7 @@ import UserProfile from "./pages/Sidebar/UserProfile";
 import Report from "./pages/Sidebar/Report";
 import DiscountEvents from "./pages/Sidebar/DiscountEvents";
 import UserList from "./pages/Sidebar/UserList";
+import Employee from "./pages/Sidebar/Employee";
 import ProductList from "./pages/Sidebar/ProductList";
 import AdminPurchaseHistory from "./pages/Sidebar/AdminPurchaseHistory";
 import PurchaseHistory from "./pages/Sidebar/PurchaseHistory";
@@ -44,6 +45,14 @@ function App() {
           element={
             <DashBoardLayout>
               <UserList />
+            </DashBoardLayout>
+          }
+        />
+         <Route
+          path="/admin/employee"
+          element={
+            <DashBoardLayout>
+              <Employee/>
             </DashBoardLayout>
           }
         />
