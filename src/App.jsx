@@ -17,6 +17,11 @@ import AdminPurchaseHistory from "./pages/Sidebar/AdminPurchaseHistory";
 import PurchaseHistory from "./pages/Sidebar/PurchaseHistory";
 import DashBoardLayout from "./components/Layout/DashBoardLayout";
 import ShoppingCart from "./pages/Sidebar/ShoppingCart";
+import Store from "./pages/Sidebar/Store";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Order from "./pages/Sidebar/Order";
 
 function App() {
   return (
@@ -48,11 +53,29 @@ function App() {
             </DashBoardLayout>
           }
         />
-         <Route
+        <Route
           path="/admin/employee"
           element={
             <DashBoardLayout>
-              <Employee/>
+              <Employee />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/store"
+          element={
+            <DashBoardLayout>
+              <Store />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/order"
+          element={
+            <DashBoardLayout>
+              <Order />
             </DashBoardLayout>
           }
         />
@@ -120,6 +143,7 @@ function App() {
           }
         />
       </Routes>
+      <ToastContainer />
     </>
   );
 }

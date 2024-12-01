@@ -11,6 +11,8 @@ import { TbCurrencyDollar } from "react-icons/tb";
 import { MdDevices } from "react-icons/md";
 import { FaHistory } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
+import { IoStorefront } from "react-icons/io5";
+import { FaShoppingCart } from "react-icons/fa";
 
 // import ModalConfirm from "../ModalConfirm/ModalConfirm";
 // import logoutImage from "../../assets/img/logout.jpg";
@@ -74,6 +76,22 @@ const Sidebar = () => {
               >
                 <FiUser size={22} />
                 <span>All Employee</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/store"
+                className={({ isActive }) => getNavLinkClass(isActive)}
+              >
+                <IoStorefront size={22} />
+                <span>All Stores</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/order"
+                className={({ isActive }) => getNavLinkClass(isActive)}
+              >
+                <FaCartShopping size={22} />
+                <span>All Orders</span>
               </NavLink>
 
               <NavLink
