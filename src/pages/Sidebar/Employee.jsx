@@ -26,7 +26,7 @@ const Employee = () => {
   const [updateID, setUpdateID] = useState(null);
   const [reactiveID, setReactiveID] = useState(null);
   const [newEmployee, setNewEmployee] = useState({
-    employeeID: "",
+    employeeId: "",
     identityCard: "",
     lname: "",
     fname: "",
@@ -34,9 +34,9 @@ const Employee = () => {
     dob: "",
     hireDate: "",
     email: "",
-    supervisorID: undefined,
+    supervisorId: undefined,
     superviseDate: undefined,
-    storeID: "",
+    storeId: "",
   });
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Employee = () => {
 
   const handleAddEmployee = async () => {
     const {
-      employeeID,
+      // employeeId,
       identityCard,
       fname,
       lname,
@@ -63,17 +63,17 @@ const Employee = () => {
       dob,
       hireDate,
       email,
-      supervisorID,
+      supervisorId,
       superviseDate,
-      storeID,
+      storeId,
     } = newEmployee;
 
-    if (!employeeID) {
-      setErrorMessage(
-        "Employee ID is required and must be exactly 7 characters."
-      );
-      return;
-    }
+    // if (!employeeId) {
+    //   setErrorMessage(
+    //     "Employee ID is required and must be exactly 7 characters."
+    //   );
+    //   return;
+    // }
     if (!identityCard) {
       setErrorMessage(
         "Identity Card is required and must be exactly 12 digits."
@@ -104,7 +104,7 @@ const Employee = () => {
       setErrorMessage("Email is required.");
       return;
     }
-    if (!storeID) {
+    if (!storeId) {
       setErrorMessage("Store ID is required.");
       return;
     }
@@ -114,7 +114,7 @@ const Employee = () => {
     const res = await addEmployee(newEmployee);
 
     setNewEmployee({
-      employeeID: "",
+      employeeId: "",
       identityCard: "",
       lname: "",
       fname: "",
@@ -122,9 +122,9 @@ const Employee = () => {
       dob: "",
       hireDate: "",
       email: "",
-      supervisorID: undefined,
+      supervisorId: undefined,
       superviseDate: undefined,
-      storeID: "",
+      storeId: "",
     });
     fetchEmployees();
     setShowModal(false);
@@ -186,11 +186,11 @@ const Employee = () => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-100">
             <tr>
-              <th scope="col" className="px-6 py-5">
+              {/* <th scope="col" className="px-6 py-5">
                 S.N
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-5">
-                EmployeeID
+                employeeId
               </th>
               <th scope="col" className="px-6 py-5">
                 IdentityCard
@@ -214,13 +214,13 @@ const Employee = () => {
                 Email
               </th>
               <th scope="col" className="px-6 py-3">
-                SupervisorID
+                supervisorId
               </th>
               <th scope="col" className="px-6 py-3">
                 SuperviseDate
               </th>
               <th scope="col" className="px-6 py-3">
-                StoreID
+                storeId
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -231,11 +231,11 @@ const Employee = () => {
             {employeeList.length > 0 ? (
               employeeList.map((user, index) => (
                 <tr
-                  key={user.employeeID}
+                  key={user.employeeId}
                   className="bg-white border-b hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4">{index + 1}</td>
-                  <td className="px-6 py-4 capitalize">{user.employeeID}</td>
+                  {/* <td className="px-6 py-4">{index + 1}</td> */}
+                  <td className="px-6 py-4 capitalize">{user.employeeId}</td>
                   <td className="px-6 py-4">{user.identityCard}</td>
                   <td className="px-6 py-4 capitalize">{user.fname}</td>
                   <td className="px-6 py-4 capitalize">{user.lname}</td>
@@ -243,14 +243,14 @@ const Employee = () => {
                   <td className="px-6 py-4">{user.dob}</td>
                   <td className="px-6 py-4">{user.hireDate}</td>
                   <td className="px-6 py-4">{user.email}</td>
-                  <td className="px-6 py-4">{user.supervisorID}</td>
+                  <td className="px-6 py-4">{user.supervisor?.employeeId}</td>
                   <td className="px-6 py-4">{user.superviseDate}</td>
-                  <td className="px-6 py-4">{user.store?.storeID}</td>
+                  <td className="px-6 py-4">{user.store?.storeId}</td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => {
-                          handleChooseUpdate(user.employeeID);
+                          handleChooseUpdate(user.employeeId);
                         }}
                         className="font-medium text-green-500"
                       >
@@ -260,7 +260,7 @@ const Employee = () => {
                         <button
                           className="font-medium text-indigo-500"
                           onClick={() => {
-                            setReactiveID(user.employeeID); // Cập nhật deleteID
+                            setReactiveID(user.employeeId); // Cập nhật deleteID
                             setShowReactiveModal(true); // Hiển thị modal xóa
                           }}
                         >
@@ -270,7 +270,7 @@ const Employee = () => {
                         <button
                           className="font-medium text-red-500"
                           onClick={() => {
-                            setDeleteID(user.employeeID); // Cập nhật deleteID
+                            setDeleteID(user.employeeId); // Cập nhật deleteID
                             setShowDeleteModal(true); // Hiển thị modal xóa
                           }}
                         >
@@ -299,21 +299,21 @@ const Employee = () => {
             <h3 className="text-xl font-medium mb-4">Add New Employee</h3>
             {/* Form */}
             <div className="grid gap-4">
-              <div>
+              {/* <div>
                 <label className="block font-medium mb-1">Employee ID</label>
                 <input
                   type="text"
                   placeholder="Enter Employee ID"
-                  value={newEmployee.employeeID}
+                  value={newEmployee.employeeId}
                   onChange={(e) =>
                     setNewEmployee({
                       ...newEmployee,
-                      employeeID: e.target.value,
+                      employeeId: e.target.value,
                     })
                   }
                   className="border p-2 rounded-lg w-full"
                 />
-              </div>
+              </div> */}
               <div>
                 <label className="block font-medium mb-1">Identity Card</label>
                 <input
@@ -407,11 +407,11 @@ const Employee = () => {
                 <input
                   type="text"
                   placeholder="Enter Supervisor ID"
-                  value={newEmployee.supervisorID}
+                  value={newEmployee.supervisorId}
                   onChange={(e) =>
                     setNewEmployee({
                       ...newEmployee,
-                      supervisorID: e.target.value,
+                      supervisorId: e.target.value,
                     })
                   }
                   className="border p-2 rounded-lg w-full"
@@ -436,9 +436,9 @@ const Employee = () => {
                 <input
                   type="text"
                   placeholder="Enter Store ID"
-                  value={newEmployee.storeID}
+                  value={newEmployee.storeId}
                   onChange={(e) =>
-                    setNewEmployee({ ...newEmployee, storeID: e.target.value })
+                    setNewEmployee({ ...newEmployee, storeId: e.target.value })
                   }
                   className="border p-2 rounded-lg w-full"
                 />
@@ -478,13 +478,14 @@ const Employee = () => {
                 <input
                   type="text"
                   placeholder="Enter Employee ID"
-                  value={currEmployee.employeeID}
+                  value={currEmployee.employeeId}
                   onChange={(e) =>
                     setCurrEmployee({
                       ...currEmployee,
-                      employeeID: e.target.value,
+                      employeeId: e.target.value,
                     })
                   }
+                  disabled
                   className="border p-2 rounded-lg w-full"
                 />
               </div>
@@ -584,11 +585,11 @@ const Employee = () => {
                 <input
                   type="text"
                   placeholder="Enter Supervisor ID"
-                  value={currEmployee.supervisorID}
+                  value={currEmployee.supervisorId}
                   onChange={(e) =>
                     setCurrEmployee({
                       ...currEmployee,
-                      supervisorID: e.target.value,
+                      supervisorId: e.target.value,
                     })
                   }
                   className="border p-2 rounded-lg w-full"
@@ -613,11 +614,11 @@ const Employee = () => {
                 <input
                   type="text"
                   placeholder="Enter Store ID"
-                  value={currEmployee.store.storeID}
+                  value={currEmployee.store.storeId}
                   onChange={(e) =>
                     setCurrEmployee({
                       ...currEmployee,
-                      storeID: e.target.value,
+                      storeId: e.target.value,
                     })
                   }
                   className="border p-2 rounded-lg w-full"

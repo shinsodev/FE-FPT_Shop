@@ -17,7 +17,7 @@ const Store = () => {
   const [deleteID, setDeleteID] = useState(null);
 
   const [newStore, setNewStore] = useState({
-    storeID: "",
+    storeId: "",
     numberOfEmployees: "",
     area: "",
     storeName: "",
@@ -25,7 +25,7 @@ const Store = () => {
   });
 
   const [currStore, setCurrStore] = useState({
-    storeID: "",
+    storeId: "",
     numberOfEmployees: "",
     area: "",
     storeName: "",
@@ -49,7 +49,7 @@ const Store = () => {
     try {
       const result = await addStore(newStore);
       setNewStore({
-        storeID: "",
+        storeId: "",
         numberOfEmployees: "",
         area: "",
         storeName: "",
@@ -72,8 +72,8 @@ const Store = () => {
   const handleUpdateStore = async () => {
     try {
       console.log(currStore);
-      console.log(currStore.storeID);
-      const result = await updateStore(currStore, currStore.storeID);
+      console.log(currStore.storeId);
+      const result = await updateStore(currStore, currStore.storeId);
       setShowUpdateModal(false);
       fetchStores();
       toast.success(result.data);
@@ -126,10 +126,10 @@ const Store = () => {
             {storeList.length > 0 ? (
               storeList.map((item) => (
                 <tr
-                  key={item.storeID}
+                  key={item.storeId}
                   className="bg-white border-b hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4">{item.storeID}</td>
+                  <td className="px-6 py-4">{item.storeId}</td>
                   <td className="px-6 py-4">{item.numberOfEmployees}</td>
                   <td className="px-6 py-4">{item.area}</td>
                   <td className="px-6 py-4">{item.storeName}</td>
@@ -144,7 +144,7 @@ const Store = () => {
                       </button>
                       <button
                         onClick={() => {
-                          setDeleteID(item.storeID);
+                          setDeleteID(item.storeId);
                           setShowDeleteModal(true);
                         }}
                         className="text-red-500"
@@ -173,7 +173,7 @@ const Store = () => {
             <h3 className="text-xl font-medium mb-4">Add New Store</h3>
             <div className="grid gap-4">
               {[
-                "storeID",
+                "storeId",
                 "numberOfEmployees",
                 "area",
                 "storeName",

@@ -20,29 +20,29 @@ const Order = () => {
   const [deleteID, setDeleteID] = useState(null);
 
   const [newOrder, setNewOrder] = useState({
-    orderID: "",
+    orderId: "",
     orderDate: "",
     orderStatus: "",
     totalAmount: "",
     employee: {
-      employeeID: "",
+      employeeId: "",
     },
     customer: {
-      customerID: "",
+      customerId: "",
     },
     // deliveryID: "",
   });
 
   const [currOrder, setCurrOrder] = useState({
-    orderID: "",
+    orderId: "",
     orderDate: "",
     orderStatus: "",
     totalAmount: "",
     employee: {
-      employeeID: "",
+      employeeId: "",
     },
     customer: {
-      customerID: "",
+      customerId: "",
     },
     // deliveryID: "",
   });
@@ -66,15 +66,15 @@ const Order = () => {
       console.log(newOrder);
       const result = await addOrder(newOrder);
       setNewOrder({
-        orderID: "",
+        orderId: "",
         orderDate: "",
         orderStatus: "",
         totalAmount: "",
         employee: {
-          employeeID: "",
+          employeeId: "",
         },
         customer: {
-          customerID: "",
+          customerId: "",
         },
         // deliveryID: "",
       });
@@ -100,10 +100,10 @@ const Order = () => {
     }
   };
 
-  const handleStatusChange = async (orderID, newStatus) => {
+  const handleStatusChange = async (orderId, newStatus) => {
     try {
       const updatedOrder = { orderStatus: newStatus };
-      const result = await updateStatusOrder(updatedOrder, orderID);
+      const result = await updateStatusOrder(updatedOrder, orderId);
       toast.success(`Order status updated to ${newStatus}`);
       fetchOrders(); // Refresh the list after status change
       setIsMenuVisible(false);
@@ -119,7 +119,7 @@ const Order = () => {
   };
 
   const handleUpdateOrder = async () => {
-    const result = await updateOrder(currOrder, currOrder.orderID);
+    const result = await updateOrder(currOrder, currOrder.orderId);
 
     setCurrOrder(null);
     fetchOrders();
@@ -157,13 +157,13 @@ const Order = () => {
             {orderList.length > 0 ? (
               orderList.map((item) => (
                 <tr
-                  key={item.orderID}
+                  key={item.orderId}
                   className="bg-white border-b hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4">{item.orderID}</td>
+                  <td className="px-6 py-4">{item.orderId}</td>
 
-                  <td className="px-6 py-4">{item.customer.customerID}</td>
-                  <td className="px-6 py-4">{item.employee.employeeID}</td>
+                  <td className="px-6 py-4">{item.customer.customerId}</td>
+                  <td className="px-6 py-4">{item.employee.employeeId}</td>
                   <td className="px-6 py-4">{item.orderDate}</td>
                   {/* <td className="px-6 py-4">{item.orderStatus}</td> */}
                   <td className="px-6 py-4">{item.totalAmount}</td>
@@ -181,7 +181,7 @@ const Order = () => {
                             <li
                               className="p-2 cursor-pointer hover:bg-gray-200"
                               onClick={() =>
-                                handleStatusChange(item.orderID, "Pending")
+                                handleStatusChange(item.orderId, "Pending")
                               }
                             >
                               Pending
@@ -189,7 +189,7 @@ const Order = () => {
                             <li
                               className="p-2 cursor-pointer hover:bg-gray-200"
                               onClick={() =>
-                                handleStatusChange(item.orderID, "Shipping")
+                                handleStatusChange(item.orderId, "Shipping")
                               }
                             >
                               Shipping
@@ -197,7 +197,7 @@ const Order = () => {
                             <li
                               className="p-2 cursor-pointer hover:bg-gray-200"
                               onClick={() =>
-                                handleStatusChange(item.orderID, "Completed")
+                                handleStatusChange(item.orderId, "Completed")
                               }
                             >
                               Completed
@@ -217,7 +217,7 @@ const Order = () => {
                       </button>
                       <button
                         onClick={() => {
-                          setDeleteID(item.orderID);
+                          setDeleteID(item.orderId);
                           setShowDeleteModal(true);
                         }}
                         className="text-red-500"
@@ -249,9 +249,9 @@ const Order = () => {
                 <label className="block font-medium mb-1">Order ID</label>
                 <input
                   type="text"
-                  value={newOrder.orderID}
+                  value={newOrder.orderId}
                   onChange={(e) =>
-                    setNewOrder({ ...newOrder, orderID: e.target.value })
+                    setNewOrder({ ...newOrder, orderId: e.target.value })
                   }
                   className="border p-2 rounded-lg w-full"
                 />
@@ -293,13 +293,13 @@ const Order = () => {
                 <label className="block font-medium mb-1">Employee ID</label>
                 <input
                   type="text"
-                  value={newOrder.employee.employeeID}
+                  value={newOrder.employee.employeeId}
                   onChange={(e) =>
                     setNewOrder({
                       ...newOrder,
                       employee: {
                         ...newOrder.employee,
-                        employeeID: e.target.value,
+                        employeeId: e.target.value,
                       },
                     })
                   }
@@ -310,13 +310,13 @@ const Order = () => {
                 <label className="block font-medium mb-1">Customer ID</label>
                 <input
                   type="text"
-                  value={newOrder.customer.customerID}
+                  value={newOrder.customer.customerId}
                   onChange={(e) =>
                     setNewOrder({
                       ...newOrder,
                       customer: {
                         ...newOrder.customer,
-                        customerID: e.target.value,
+                        customerId: e.target.value,
                       },
                     })
                   }
@@ -396,9 +396,9 @@ const Order = () => {
                 <label className="block font-medium mb-1">Order ID</label>
                 <input
                   type="text"
-                  value={currOrder.orderID}
+                  value={currOrder.orderId}
                   onChange={(e) =>
-                    setCurrOrder({ ...currOrder, orderID: e.target.value })
+                    setCurrOrder({ ...currOrder, orderId: e.target.value })
                   }
                   className="border p-2 rounded-lg w-full"
                 />
@@ -440,13 +440,13 @@ const Order = () => {
                 <label className="block font-medium mb-1">Employee ID</label>
                 <input
                   type="text"
-                  value={currOrder.employee.employeeID}
+                  value={currOrder.employee.employeeId}
                   onChange={(e) =>
                     setCurrOrder({
                       ...currOrder,
                       employee: {
                         ...currOrder.employee,
-                        employeeID: e.target.value,
+                        employeeId: e.target.value,
                       },
                     })
                   }
@@ -457,13 +457,13 @@ const Order = () => {
                 <label className="block font-medium mb-1">Customer ID</label>
                 <input
                   type="text"
-                  value={currOrder.customer.customerID}
+                  value={currOrder.customer.customerId}
                   onChange={(e) =>
                     setCurrOrder({
                       ...currOrder,
                       customer: {
                         ...currOrder.customer,
-                        customerID: e.target.value,
+                        customerId: e.target.value,
                       },
                     })
                   }
