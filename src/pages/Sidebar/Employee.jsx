@@ -257,10 +257,10 @@ const Employee = () => {
           onChange={(e) => setSortOptionSearch(e.target.value)}
         >
           <option value="">Select Sort Option</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-          <option value="4">Option 4</option>
+          <option value="1">Store name</option>
+          <option value="2">First name</option>
+          <option value="3">Email</option>
+          <option value="4">Phone</option>
         </select>
         <button
           className="p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center space-x-2"

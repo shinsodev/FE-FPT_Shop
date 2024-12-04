@@ -49,13 +49,13 @@ const Sidebar = () => {
 
         {/* Các mục điều hướng của Sidebar */}
         <div>
-          <NavLink
+          {/* <NavLink
             to="/dashboard"
             className={({ isActive }) => getNavLinkClass(isActive)}
           >
             <CiGrid41 size={22} />
             <span>Dashboard</span>
-          </NavLink>
+          </NavLink> */}
 
           {/* Mục hiển thị cho Admin */}
           {role === "ADMIN" && (
@@ -77,7 +77,7 @@ const Sidebar = () => {
                 className={({ isActive }) => getNavLinkClass(isActive)}
               >
                 <FiUser size={22} />
-                <span>All Employee</span>
+                <span>All Employees</span>
               </NavLink>
 
               <NavLink
@@ -120,7 +120,7 @@ const Sidebar = () => {
                 <span>All Accessories List</span>
               </NavLink>
 
-              <NavLink
+              {/* <NavLink
                 to="/admin/purchasehistory"
                 className={({ isActive }) => getNavLinkClass(isActive)}
               >
@@ -142,7 +142,7 @@ const Sidebar = () => {
               >
                 <TbCurrencyDollar size={22} />
                 <span>Report</span>
-              </NavLink>
+              </NavLink> */}
             </>
           )}
 
@@ -178,13 +178,13 @@ const Sidebar = () => {
           )}
 
           {/* Mục Profile cho cả User và Admin */}
-          <NavLink
+          {/* <NavLink
             to="/profile"
             className={({ isActive }) => getNavLinkClass(isActive)}
           >
             <IoSettingsOutline size={22} />
             <span>Personal Profile</span>
-          </NavLink>
+          </NavLink> */}
 
           {/* Nút Logout */}
           <div className="flex items-center justify-center m-5 hover:opacity-60 text-center">
