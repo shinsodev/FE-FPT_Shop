@@ -37,9 +37,7 @@ const UserProfile = () => {
             className="w-24 h-24 rounded-full object-cover"
           />
           <div>
-            <div className="text-[30px] font-medium capitalize">
-              {user.name}
-            </div>
+            <div className="text-[30px] font-medium">{user.name}</div>
             <div className="text-gray-500">{user.email}</div>
           </div>
         </div>

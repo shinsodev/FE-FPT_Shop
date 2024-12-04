@@ -13,6 +13,8 @@ import { FaHistory } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoStorefront } from "react-icons/io5";
 import { FaShoppingCart } from "react-icons/fa";
+import { FaProductHunt } from "react-icons/fa";
+import { BsDeviceSsdFill } from "react-icons/bs";
 
 // import ModalConfirm from "../ModalConfirm/ModalConfirm";
 // import logoutImage from "../../assets/img/logout.jpg";
@@ -68,7 +70,7 @@ const Sidebar = () => {
                 className={({ isActive }) => getNavLinkClass(isActive)}
               >
                 <FiUser size={22} />
-                <span>All Users</span>
+                <span>All Customers</span>
               </NavLink>
               <NavLink
                 to="/admin/employee"
@@ -98,8 +100,24 @@ const Sidebar = () => {
                 to="/admin/productlist"
                 className={({ isActive }) => getNavLinkClass(isActive)}
               >
-                <MdDevices size={22} />
+                <FaProductHunt size={22} />
                 <span>All Products List</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/devicelist"
+                className={({ isActive }) => getNavLinkClass(isActive)}
+              >
+                <MdDevices size={22} />
+                <span>All Devices List</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/accessorieslist"
+                className={({ isActive }) => getNavLinkClass(isActive)}
+              >
+                <BsDeviceSsdFill size={22} />
+                <span>All Accessories List</span>
               </NavLink>
 
               <NavLink

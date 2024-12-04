@@ -5,13 +5,24 @@ import {
   addOrder,
   updateStatusOrder,
   updateOrder,
+  addPLOrder,
+  deletePLOrder,
 } from "../../services/OrderServices";
+import { getOrdersByTime } from "../../services/OrderServices";
 import { toast } from "react-toastify";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
+import { IoIosAddCircle } from "react-icons/io";
+
 const Order = () => {
   const [orderList, setOrderList] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showAddPLModal, setShowAddPLModal] = useState(false);
+  const [showDeletePLModal, setShowDeletePLModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [chooseOrder, setChooseOrder] = useState(null);
+  const [searchOrderByTime, setSearchOrderByTime] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   //   const [statusOrder, setStatusOrder] = useState("");
@@ -24,13 +35,9 @@ const Order = () => {
     orderDate: "",
     orderStatus: "",
     totalAmount: "",
-    employee: {
-      employeeId: "",
-    },
-    customer: {
-      customerId: "",
-    },
-    // deliveryID: "",
+    employeeId: "",
+    customerId: "",
+    deliveryId: "",
   });
 
   const [currOrder, setCurrOrder] = useState({
@@ -38,13 +45,21 @@ const Order = () => {
     orderDate: "",
     orderStatus: "",
     totalAmount: "",
-    employee: {
-      employeeId: "",
-    },
-    customer: {
-      customerId: "",
-    },
-    // deliveryID: "",
+    employeeId: "",
+    customerId: "",
+    deliveryId: "",
+  });
+
+  const [addProductLine, setAddProductLine] = useState({
+    orderId: "",
+    productLineId: "",
+    price: "",
+    quantity: "",
+  });
+
+  const [deleteProductLine, setDeleteProductLine] = useState({
+    orderId: "",
+    productLineId: "",
   });
 
   useEffect(() => {
@@ -66,17 +81,13 @@ const Order = () => {
       console.log(newOrder);
       const result = await addOrder(newOrder);
       setNewOrder({
-        orderId: "",
+        // orderId: "",
         orderDate: "",
         orderStatus: "",
         totalAmount: "",
-        employee: {
-          employeeId: "",
-        },
-        customer: {
-          customerId: "",
-        },
-        // deliveryID: "",
+        employeeId: "",
+        customerId: "",
+        deliveryId: "",
       });
       fetchOrders();
       setShowModal(false);
@@ -102,10 +113,11 @@ const Order = () => {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const updatedOrder = { orderStatus: newStatus };
+      const updatedOrder = { orderId, orderStatus: newStatus };
       const result = await updateStatusOrder(updatedOrder, orderId);
       toast.success(`Order status updated to ${newStatus}`);
       fetchOrders(); // Refresh the list after status change
+      handleSearch();
       setIsMenuVisible(false);
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -113,10 +125,10 @@ const Order = () => {
     }
   };
 
-  const handleChooseUpdate = (order) => {
-    setCurrOrder(order);
-    setShowUpdateModal(true);
-  };
+  // const handleChooseUpdate = (order) => {
+  //   setCurrOrder(order);
+  //   setShowUpdateModal(true);
+  // };
 
   const handleUpdateOrder = async () => {
     const result = await updateOrder(currOrder, currOrder.orderId);
@@ -126,118 +138,343 @@ const Order = () => {
     setShowUpdateModal(false);
     toast.success(result.data);
   };
+
+  const handleAddPLOrder = async () => {
+    try {
+      console.log(addProductLine);
+      const result = await addPLOrder(addProductLine, addProductLine.orderId);
+      setAddProductLine({
+        orderId: "",
+        productLineId: "",
+        price: "",
+        quantity: "",
+      });
+      fetchOrders();
+      setShowAddPLModal(false);
+      toast.success(result.data);
+    } catch (error) {
+      console.error("Error adding product line into order:", error);
+      toast.error("Failed to add product line into order.");
+    }
+  };
+
+  const handleDeletePLOrder = async () => {
+    try {
+      const result = await deletePLOrder(
+        deleteProductLine,
+        deleteProductLine.orderId
+      );
+      setDeleteProductLine({
+        orderId: "",
+        productLineId: "",
+      });
+      fetchOrders();
+      setShowDeletePLModal(false);
+      toast.success(result.data);
+    } catch (error) {
+      console.error("Error delete product line into order:", error);
+      toast.error("Failed to delete product line into order.");
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      const result = await getOrdersByTime(startDate, endDate);
+      console.log(result.data);
+      setSearchOrderByTime(result.data);
+    } catch (error) {
+      console.error("Error searching", error);
+    }
+  };
+
+  const handleReset = () => {
+    setSearchOrderByTime([]);
+    setStartDate("");
+    setEndDate("");
+    fetchOrders();
+  };
+
   return (
     <section className="p-8">
       <div className="flex justify-between items-center">
         <h2 className="font-medium text-3xl">ORDER LIST</h2>
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-          onClick={() => setShowModal(true)}
-        >
-          Add Order
-        </button>
+        <div>
+          <button
+            className="px-4 py-2 bg-green-700 text-white rounded-lg"
+            onClick={() => setShowAddPLModal(true)}
+          >
+            Add Product Line
+          </button>
+          <button
+            className="ml-4 px-4 py-2 bg-red-700 text-white rounded-lg"
+            onClick={() => setShowDeletePLModal(true)}
+          >
+            Delete Product Line
+          </button>
+          <button
+            className="ml-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+            onClick={() => setShowModal(true)}
+          >
+            Add Order
+          </button>
+        </div>
       </div>
       <hr className="my-5" />
+      <div className="text-[17px] font-medium">
+        Filter customer orders by date
+      </div>
+      <div className="flex gap-x-4 my-4 w-[500px]">
+        <input
+          type="date"
+          placeholder="Enter Start Date"
+          className="border p-2 rounded-lg w-full"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          placeholder="Enter End Date"
+          className="border p-2 rounded-lg w-full"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
+
+        <button
+          className="p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center space-x-2"
+          onClick={handleSearch}
+        >
+          <FaSearch />
+          <div>Search</div>
+        </button>
+
+        <button
+          className="p-4 bg-yellow-600 text-white rounded-lg transition-all flex items-center justify-center space-x-2"
+          onClick={handleReset}
+        >
+          <div>Reset</div>
+        </button>
+      </div>
 
       {/* Order List */}
-      <div className="relative overflow-x-auto rounded-lg min-h-screen">
-        <table className="w-full text-sm text-left text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100">
-            <tr>
-              <th className="px-6 py-5">Order ID</th>
-              <th className="px-6 py-5">Customer ID</th>
-              <th className="px-6 py-5">Employee ID</th>
-              <th className="px-6 py-5">Order Date</th>
-              <th className="px-6 py-5">Total Amount</th>
-              <th className="px-6 py-5">Order Status</th>
-              <th className="px-6 py-5 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderList.length > 0 ? (
-              orderList.map((item) => (
-                <tr
-                  key={item.orderId}
-                  className="bg-white border-b hover:bg-gray-50"
-                >
-                  <td className="px-6 py-4">{item.orderId}</td>
+      {searchOrderByTime.length > 0 ? (
+        <div className="relative overflow-x-auto rounded-lg min-h-screen">
+          <table className="w-full text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+              <tr>
+                <th className="px-6 py-5">Order ID</th>
+                <th className="px-6 py-5">Customer ID</th>
+                <th className="px-6 py-5">Customer First Name</th>
+                <th className="px-6 py-5">Customer Last Name</th>
+                <th className="px-6 py-5">Total Amount</th>
+                <th className="px-6 py-5">Order Date</th>
+                <th className="px-6 py-5">Order Status</th>
+                <th className="px-6 py-5 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchOrderByTime.length > 0 ? (
+                searchOrderByTime.map((item) => (
+                  <tr
+                    key={item.OrderID}
+                    className="bg-white border-b hover:bg-gray-50"
+                  >
+                    <td className="px-6 py-4">{item.OrderID}</td>
+                    <td className="px-6 py-4">{item.CustomerID}</td>
+                    <td className="px-6 py-4">{item.CustomerFirstName}</td>
+                    <td className="px-6 py-4">{item.CustomerLastName}</td>
+                    <td className="px-6 py-4">{item.TotalAmount}</td>
 
-                  <td className="px-6 py-4">{item.customer.customerId}</td>
-                  <td className="px-6 py-4">{item.employee.employeeId}</td>
-                  <td className="px-6 py-4">{item.orderDate}</td>
-                  {/* <td className="px-6 py-4">{item.orderStatus}</td> */}
-                  <td className="px-6 py-4">{item.totalAmount}</td>
-                  <td className="px-6 py-4">
-                    <div className="relative">
-                      <button
-                        className="bg-gray-200 p-2 rounded-lg"
-                        onClick={() => setIsMenuVisible(!isMenuVisible)} // Toggle menu visibility
-                      >
-                        {item.orderStatus}
-                      </button>
-                      {isMenuVisible && (
-                        <div className="absolute top-0 right-0 mt-2 bg-white shadow-md rounded-lg">
-                          <ul className="text-sm text-gray-700">
-                            <li
-                              className="p-2 cursor-pointer hover:bg-gray-200"
-                              onClick={() =>
-                                handleStatusChange(item.orderId, "Pending")
-                              }
-                            >
-                              Pending
-                            </li>
-                            <li
-                              className="p-2 cursor-pointer hover:bg-gray-200"
-                              onClick={() =>
-                                handleStatusChange(item.orderId, "Shipping")
-                              }
-                            >
-                              Shipping
-                            </li>
-                            <li
-                              className="p-2 cursor-pointer hover:bg-gray-200"
-                              onClick={() =>
-                                handleStatusChange(item.orderId, "Completed")
-                              }
-                            >
-                              Completed
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    <td className="px-6 py-4">{item.OrderDate}</td>
+                    {/* <td className="px-6 py-4">{item.OrderStatus}</td> */}
+                    <td className="px-6 py-4">
+                      <div className="relative">
+                        <button
+                          className="bg-gray-200 p-2 rounded-lg"
+                          onClick={() => {
+                            setIsMenuVisible(!isMenuVisible);
+                            setChooseOrder(item.OrderID);
+                          }} // Toggle menu visibility
+                        >
+                          {item.OrderStatus}
+                        </button>
+                        {isMenuVisible && chooseOrder === item.OrderID && (
+                          <div className="absolute top-0 right-0 mt-2 bg-white shadow-md rounded-lg z-10">
+                            <ul className="text-sm text-gray-700">
+                              <li
+                                className="p-2 cursor-pointer hover:bg-gray-200"
+                                onClick={() =>
+                                  handleStatusChange(item.OrderID, "pending")
+                                }
+                              >
+                                pending
+                              </li>
+                              <li
+                                className="p-2 cursor-pointer hover:bg-gray-200"
+                                onClick={() =>
+                                  handleStatusChange(item.OrderID, "shipping")
+                                }
+                              >
+                                shipping
+                              </li>
+                              <li
+                                className="p-2 cursor-pointer hover:bg-gray-200"
+                                onClick={() =>
+                                  handleStatusChange(item.OrderID, "completed")
+                                }
+                              >
+                                completed
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => {
+                            setDeleteID(item.OrderID);
+                            setShowDeleteModal(true);
+                          }}
+                          className="text-red-500"
+                        >
+                          <FaTrash size={20} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center py-4">
+                    No orders found
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex items-center gap-3">
-                      <button
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="relative overflow-x-auto rounded-lg min-h-screen">
+          <table className="w-full text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+              <tr>
+                <th className="px-6 py-5">Order ID</th>
+                <th className="px-6 py-5">Customer ID</th>
+                <th className="px-6 py-5">Customer First Name</th>
+                <th className="px-6 py-5">Customer Last Name</th>
+                <th className="px-6 py-5">Customer Email</th>
+                <th className="px-6 py-5">Employee ID</th>
+                <th className="px-6 py-5">Order Date</th>
+                <th className="px-6 py-5">Total Amount</th>
+                <th className="px-6 py-5">Order Status</th>
+                <th className="px-6 py-5 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orderList.length > 0 ? (
+                orderList.map((item) => (
+                  <tr
+                    key={item.orderId}
+                    className="bg-white border-b hover:bg-gray-50"
+                  >
+                    <td className="px-6 py-4">{item.orderId}</td>
+
+                    <td className="px-6 py-4">{item.customer.customerId}</td>
+                    <td className="px-6 py-4">{item.customer.fname}</td>
+                    <td className="px-6 py-4">{item.customer.lname}</td>
+                    <td className="px-6 py-4">{item.customer.email}</td>
+                    <td className="px-6 py-4">{item.employee.employeeId}</td>
+                    <td className="px-6 py-4">{item.orderDate}</td>
+                    {/* <td className="px-6 py-4">{item.orderStatus}</td> */}
+                    <td className="px-6 py-4">{item.totalAmount}</td>
+                    <td className="px-6 py-4">
+                      <div className="relative">
+                        <button
+                          className="bg-gray-200 p-2 rounded-lg"
+                          onClick={() => {
+                            setIsMenuVisible(!isMenuVisible);
+                            setChooseOrder(item.orderId);
+                          }} // Toggle menu visibility
+                        >
+                          {item.orderStatus}
+                        </button>
+                        {isMenuVisible && chooseOrder === item.orderId && (
+                          <div className="absolute top-0 right-0 mt-2 bg-white shadow-md rounded-lg z-10">
+                            <ul className="text-sm text-gray-700">
+                              <li
+                                className="p-2 cursor-pointer hover:bg-gray-200"
+                                onClick={() =>
+                                  handleStatusChange(item.orderId, "pending")
+                                }
+                              >
+                                pending
+                              </li>
+                              <li
+                                className="p-2 cursor-pointer hover:bg-gray-200"
+                                onClick={() =>
+                                  handleStatusChange(item.orderId, "shipping")
+                                }
+                              >
+                                shipping
+                              </li>
+                              <li
+                                className="p-2 cursor-pointer hover:bg-gray-200"
+                                onClick={() =>
+                                  handleStatusChange(item.orderId, "completed")
+                                }
+                              >
+                                completed
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex items-center gap-3">
+                        {/* <button
                         onClick={() => handleChooseUpdate(item)}
                         className="text-green-500"
                       >
                         <FaEdit size={20} />
-                      </button>
-                      <button
+                      </button> */}
+
+                        {/* <button
                         onClick={() => {
-                          setDeleteID(item.orderId);
-                          setShowDeleteModal(true);
+                          setChooseID(item.orderId);
+                          // setShowDeleteModal(true);
                         }}
-                        className="text-red-500"
+                        className="text-green-700"
                       >
-                        <FaTrash size={20} />
-                      </button>
-                    </div>
+                        <IoIosAddCircle size={20} />
+                      </button> */}
+
+                        <button
+                          onClick={() => {
+                            setDeleteID(item.orderId);
+                            setShowDeleteModal(true);
+                          }}
+                          className="text-red-500"
+                        >
+                          <FaTrash size={20} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center py-4">
+                    No orders found
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center py-4">
-                  No stores found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Add Order Modal */}
       {showModal && (
@@ -245,7 +482,7 @@ const Order = () => {
           <div className="bg-white p-8 rounded-lg w-1/3">
             <h3 className="text-xl font-medium mb-4">Add New Order</h3>
             <div className="grid gap-4">
-              <div>
+              {/* <div>
                 <label className="block font-medium mb-1">Order ID</label>
                 <input
                   type="text"
@@ -253,10 +490,11 @@ const Order = () => {
                   onChange={(e) =>
                     setNewOrder({ ...newOrder, orderId: e.target.value })
                   }
+                  // disabled
                   className="border p-2 rounded-lg w-full"
                 />
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <label className="block font-medium mb-1">Order Date</label>
                 <input
                   type="date"
@@ -266,19 +504,26 @@ const Order = () => {
                   }
                   className="border p-2 rounded-lg w-full"
                 />
-              </div>
+              </div> */}
               <div>
                 <label className="block font-medium mb-1">Order Status</label>
-                <input
-                  type="text"
+                <select
                   value={newOrder.orderStatus}
                   onChange={(e) =>
                     setNewOrder({ ...newOrder, orderStatus: e.target.value })
                   }
                   className="border p-2 rounded-lg w-full"
-                />
+                >
+                  <option value="" disabled>
+                    Select Status
+                  </option>
+                  <option value="shipping">shipping</option>
+                  <option value="completed">completed</option>
+                  <option value="pending">pending</option>
+                </select>
               </div>
-              <div>
+
+              {/* <div>
                 <label className="block font-medium mb-1">Total Amount</label>
                 <input
                   type="number"
@@ -288,19 +533,16 @@ const Order = () => {
                   }
                   className="border p-2 rounded-lg w-full"
                 />
-              </div>
+              </div> */}
               <div>
                 <label className="block font-medium mb-1">Employee ID</label>
                 <input
                   type="text"
-                  value={newOrder.employee.employeeId}
+                  value={newOrder.employeeId}
                   onChange={(e) =>
                     setNewOrder({
                       ...newOrder,
-                      employee: {
-                        ...newOrder.employee,
-                        employeeId: e.target.value,
-                      },
+                      employeeId: e.target.value,
                     })
                   }
                   className="border p-2 rounded-lg w-full"
@@ -310,30 +552,27 @@ const Order = () => {
                 <label className="block font-medium mb-1">Customer ID</label>
                 <input
                   type="text"
-                  value={newOrder.customer.customerId}
+                  value={newOrder.customerId}
                   onChange={(e) =>
                     setNewOrder({
                       ...newOrder,
-                      customer: {
-                        ...newOrder.customer,
-                        customerId: e.target.value,
-                      },
+                      customerId: e.target.value,
                     })
                   }
                   className="border p-2 rounded-lg w-full"
                 />
               </div>
-              {/* <div>
+              <div>
                 <label className="block font-medium mb-1">Delivery ID</label>
                 <input
                   type="text"
-                  value={newOrder.deliveryID}
+                  value={newOrder.deliveryId}
                   onChange={(e) =>
-                    setNewOrder({ ...newOrder, deliveryID: e.target.value })
+                    setNewOrder({ ...newOrder, deliveryId: e.target.value })
                   }
                   className="border p-2 rounded-lg w-full"
                 />
-              </div> */}
+              </div>
             </div>
 
             <div className="mt-4 flex justify-end gap-3">
@@ -348,6 +587,152 @@ const Order = () => {
                 onClick={() => handleAddOrder()}
               >
                 Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Product Line */}
+      {showAddPLModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg w-1/3">
+            <h3 className="text-xl font-medium mb-4">
+              Add Product Line Into Order
+            </h3>
+            <div className="grid gap-4">
+              <div>
+                <label className="block font-medium mb-1">Order ID</label>
+                <input
+                  type="text"
+                  value={addProductLine.orderId}
+                  onChange={(e) =>
+                    setAddProductLine({
+                      ...addProductLine,
+                      orderId: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Product Line ID
+                </label>
+                <input
+                  type="text"
+                  value={addProductLine.productLineId}
+                  onChange={(e) =>
+                    setAddProductLine({
+                      ...addProductLine,
+                      productLineId: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Price</label>
+                <input
+                  type="text"
+                  value={addProductLine.price}
+                  onChange={(e) =>
+                    setAddProductLine({
+                      ...addProductLine,
+                      price: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Quantity</label>
+                <input
+                  type="text"
+                  value={addProductLine.quantity}
+                  onChange={(e) =>
+                    setAddProductLine({
+                      ...addProductLine,
+                      quantity: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded-lg"
+                onClick={() => setShowAddPLModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                onClick={() => handleAddPLOrder()}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Product Line */}
+      {showDeletePLModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg w-1/3">
+            <h3 className="text-xl font-medium mb-4">
+              Delete Product Line Of Order
+            </h3>
+            <div className="grid gap-4">
+              <div>
+                <label className="block font-medium mb-1">Order ID</label>
+                <input
+                  type="text"
+                  value={deleteProductLine.orderId}
+                  onChange={(e) =>
+                    setDeleteProductLine({
+                      ...deleteProductLine,
+                      orderId: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Product Line ID
+                </label>
+                <input
+                  type="text"
+                  value={deleteProductLine.productLineId}
+                  onChange={(e) =>
+                    setDeleteProductLine({
+                      ...deleteProductLine,
+                      productLineId: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded-lg"
+                onClick={() => setShowDeletePLModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                onClick={() => handleDeletePLOrder()}
+              >
+                Delete
               </button>
             </div>
           </div>
@@ -474,9 +859,9 @@ const Order = () => {
                 <label className="block font-medium mb-1">Delivery ID</label>
                 <input
                   type="text"
-                  value={currOrder.deliveryID}
+                  value={currOrder.deliveryId}
                   onChange={(e) =>
-                    setCurrOrder({ ...currOrder, deliveryID: e.target.value })
+                    setCurrOrder({ ...currOrder, deliveryId: e.target.value })
                   }
                   className="border p-2 rounded-lg w-full"
                 />

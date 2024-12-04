@@ -66,3 +66,30 @@ export async function updateEmployee(currEmployee, id) {
     console.error(error);
   }
 }
+
+export async function searchEmployees(
+  storeName,
+  employeeName,
+  phone,
+  email,
+  sortOption
+) {
+  try {
+    const result = await axios.get(
+      "http://localhost:8080/api/employees/search",
+      {
+        params: {
+          storeName,
+          employeeName,
+          phone,
+          email,
+          sortOption,
+        },
+      }
+    );
+
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+}

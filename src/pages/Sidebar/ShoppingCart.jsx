@@ -79,7 +79,7 @@ const ShoppingCart = () => {
                   key={item.id}
                   className="bg-white border-b hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4 capitalize">{item.productName}</td>
+                  <td className="px-6 py-4">{item.productName}</td>
                   <td className="px-6 py-4">
                     <input
                       type="number"

@@ -67,12 +67,10 @@ const PurchaseHistory = () => {
                   className="bg-white border-b hover:bg-gray-50"
                 >
                   <td className="px-6 py-4">{purchase.id}</td>
-                  <td className="px-6 py-4 capitalize">
-                    {purchase.productName}
-                  </td>
+                  <td className="px-6 py-4">{purchase.productName}</td>
                   <td className="px-6 py-4">{purchase.purchaseDate}</td>
                   <td className="px-6 py-4">${purchase.price}</td>
-                  <td className="px-6 py-4 capitalize">{purchase.status}</td>
+                  <td className="px-6 py-4">{purchase.status}</td>
                   <td className="px-6 py-4 text-center">
                     <NavLink
                       to={`/order/details/${purchase.id}`}

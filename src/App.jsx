@@ -18,6 +18,8 @@ import PurchaseHistory from "./pages/Sidebar/PurchaseHistory";
 import DashBoardLayout from "./components/Layout/DashBoardLayout";
 import ShoppingCart from "./pages/Sidebar/ShoppingCart";
 import Store from "./pages/Sidebar/Store";
+import DeviceList from "./pages/Sidebar/DeviceList";
+import AccessoryList from "./pages/Sidebar/Accessory";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -85,6 +87,24 @@ function App() {
           element={
             <DashBoardLayout>
               <ProductList />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/devicelist"
+          element={
+            <DashBoardLayout>
+              <DeviceList />
+            </DashBoardLayout>
+          }
+        />
+
+        <Route
+          path="/admin/accessorieslist"
+          element={
+            <DashBoardLayout>
+              <AccessoryList />
             </DashBoardLayout>
           }
         />

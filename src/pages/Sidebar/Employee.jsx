@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { FaHistory } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
+import { FaSearch } from "react-icons/fa";
 
 import {
   getAllEmployees,
@@ -11,6 +12,7 @@ import {
   ReactiveEmployee,
   getEmployeeById,
   updateEmployee,
+  searchEmployees,
 } from "../../services/EmployeeServices";
 import { toast } from "react-toastify";
 
@@ -25,6 +27,13 @@ const Employee = () => {
   const [deleteID, setDeleteID] = useState(null);
   const [updateID, setUpdateID] = useState(null);
   const [reactiveID, setReactiveID] = useState(null);
+
+  const [storeNameSearch, setStoreNameSearch] = useState(null);
+  const [employeeNameSearch, setEmployeeNameSearch] = useState(null);
+  const [phoneSearch, setPhoneSearch] = useState(null);
+  const [emailSearch, setEmailSearch] = useState(null);
+  const [sortOptionSearch, setSortOptionSearch] = useState(null);
+
   const [newEmployee, setNewEmployee] = useState({
     employeeId: "",
     identityCard: "",
@@ -74,40 +83,40 @@ const Employee = () => {
     //   );
     //   return;
     // }
-    if (!identityCard) {
-      setErrorMessage(
-        "Identity Card is required and must be exactly 12 digits."
-      );
-      return;
-    }
-    if (!fname) {
-      setErrorMessage("First Name is required.");
-      return;
-    }
-    if (!lname) {
-      setErrorMessage("Last Name is required.");
-      return;
-    }
-    if (!phoneNumber) {
-      setErrorMessage("Phone Number is required and must be 10 digits.");
-      return;
-    }
-    if (!dob) {
-      setErrorMessage("Date of Birth is required.");
-      return;
-    }
-    if (!hireDate) {
-      setErrorMessage("Hire Date is required.");
-      return;
-    }
-    if (!email) {
-      setErrorMessage("Email is required.");
-      return;
-    }
-    if (!storeId) {
-      setErrorMessage("Store ID is required.");
-      return;
-    }
+    // if (!identityCard) {
+    //   setErrorMessage(
+    //     "Identity Card is required and must be exactly 12 digits."
+    //   );
+    //   return;
+    // }
+    // if (!fname) {
+    //   setErrorMessage("First Name is required.");
+    //   return;
+    // }
+    // if (!lname) {
+    //   setErrorMessage("Last Name is required.");
+    //   return;
+    // }
+    // if (!phoneNumber) {
+    //   setErrorMessage("Phone Number is required and must be 10 digits.");
+    //   return;
+    // }
+    // if (!dob) {
+    //   setErrorMessage("Date of Birth is required.");
+    //   return;
+    // }
+    // if (!hireDate) {
+    //   setErrorMessage("Hire Date is required.");
+    //   return;
+    // }
+    // if (!email) {
+    //   setErrorMessage("Email is required.");
+    //   return;
+    // }
+    // if (!storeId) {
+    //   setErrorMessage("Store ID is required.");
+    //   return;
+    // }
 
     // Logic to add employee goes here
     // console.log("New Employee Added:", newEmployee);
@@ -168,6 +177,37 @@ const Employee = () => {
     toast.success(result.data);
   };
 
+  const handleSearch = async () => {
+    try {
+      let result;
+
+      // Kiểm tra nếu tất cả các input đều rỗng
+      if (
+        !storeNameSearch &&
+        !employeeNameSearch &&
+        !phoneSearch &&
+        !emailSearch &&
+        !sortOptionSearch
+      ) {
+        // Gọi fetchEmployees nếu tất cả các input trống
+        result = await getAllEmployees();
+      } else {
+        // Gọi searchEmployees nếu có ít nhất một input có giá trị
+        result = await searchEmployees(
+          storeNameSearch,
+          employeeNameSearch,
+          phoneSearch,
+          emailSearch,
+          sortOptionSearch
+        );
+      }
+
+      setEmployeeList(result.data);
+    } catch (error) {
+      console.error("Error searching", error);
+    }
+  };
+
   return (
     <section className="p-8">
       <div className="flex justify-between items-center">
@@ -181,6 +221,56 @@ const Employee = () => {
       </div>
       <hr className="my-5" />
 
+      {/* Sort employee */}
+      <div className="flex gap-x-4 my-6">
+        <input
+          type="text"
+          placeholder="Enter Store Name"
+          className="border p-2 rounded-lg w-full"
+          value={storeNameSearch}
+          onChange={(e) => setStoreNameSearch(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter Employee Name"
+          className="border p-2 rounded-lg w-full"
+          value={employeeNameSearch}
+          onChange={(e) => setEmployeeNameSearch(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter Phone Number"
+          className="border p-2 rounded-lg w-full"
+          value={phoneSearch}
+          onChange={(e) => setPhoneSearch(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter Email"
+          className="border p-2 rounded-lg w-full"
+          value={emailSearch}
+          onChange={(e) => setEmailSearch(e.target.value)}
+        />
+        <select
+          className="border p-2 rounded-lg w-full"
+          value={sortOptionSearch}
+          onChange={(e) => setSortOptionSearch(e.target.value)}
+        >
+          <option value="">Select Sort Option</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+          <option value="4">Option 4</option>
+        </select>
+        <button
+          className="p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center space-x-2"
+          onClick={handleSearch}
+        >
+          <FaSearch />
+          <div>Search</div>
+        </button>
+      </div>
+
       {/* list */}
       <div className="relative overflow-x-auto rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
@@ -190,10 +280,10 @@ const Employee = () => {
                 S.N
               </th> */}
               <th scope="col" className="px-6 py-5">
-                employeeId
+                employee Id
               </th>
               <th scope="col" className="px-6 py-5">
-                IdentityCard
+                Identity Card
               </th>
               <th scope="col" className="px-6 py-5">
                 Fname
@@ -208,19 +298,19 @@ const Employee = () => {
                 DOB
               </th>
               <th scope="col" className="px-6 py-3">
-                HireDate
+                Hire Date
               </th>
               <th scope="col" className="px-6 py-3">
                 Email
               </th>
               <th scope="col" className="px-6 py-3">
-                supervisorId
+                supervisor Id
               </th>
               <th scope="col" className="px-6 py-3">
-                SuperviseDate
+                Supervise Date
               </th>
               <th scope="col" className="px-6 py-3">
-                storeId
+                store Id
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -235,10 +325,10 @@ const Employee = () => {
                   className="bg-white border-b hover:bg-gray-50"
                 >
                   {/* <td className="px-6 py-4">{index + 1}</td> */}
-                  <td className="px-6 py-4 capitalize">{user.employeeId}</td>
+                  <td className="px-6 py-4">{user.employeeId}</td>
                   <td className="px-6 py-4">{user.identityCard}</td>
-                  <td className="px-6 py-4 capitalize">{user.fname}</td>
-                  <td className="px-6 py-4 capitalize">{user.lname}</td>
+                  <td className="px-6 py-4">{user.fname}</td>
+                  <td className="px-6 py-4">{user.lname}</td>
                   <td className="px-6 py-4">{user.phoneNumber}</td>
                   <td className="px-6 py-4">{user.dob}</td>
                   <td className="px-6 py-4">{user.hireDate}</td>
@@ -584,7 +674,9 @@ const Employee = () => {
                 <label className="block font-medium mb-1">Supervisor ID</label>
                 <input
                   type="text"
-                  placeholder="Enter Supervisor ID"
+                  placeholder={
+                    currEmployee.supervisor?.employeeId || "Enter Supervisor ID"
+                  }
                   value={currEmployee.supervisorId}
                   onChange={(e) =>
                     setCurrEmployee({
@@ -595,6 +687,7 @@ const Employee = () => {
                   className="border p-2 rounded-lg w-full"
                 />
               </div>
+
               <div>
                 <label className="block font-medium mb-1">Supervise Date</label>
                 <input
