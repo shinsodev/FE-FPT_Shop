@@ -68,7 +68,7 @@ const ProductList = () => {
   };
 
   const handleResetTopSelling = () => {
-    setSearchTopSelling([]);
+    setSearchTopSelling(null);
     setMinQuantitySold("");
     setDate("");
 
@@ -125,14 +125,14 @@ const ProductList = () => {
       </div>
 
       {searchTotalSales && (
-        <div className="text-[17px] font-medium mb-4 text-red-700">
+        <div className="text-[17px] font-medium mb-4 text-green-700">
           Total sales of a product line ID {searchProductLineId}:{" "}
           {searchTotalSales}
         </div>
       )}
 
       {/* Get top selling products */}
-      <div className="text-[17px] font-medium">Find top selling products</div>
+      <div className="text-[17px] font-medium">Get products that met KPIs for the day</div>
       <div className="flex gap-x-4 my-4 w-[500px]">
         <input
           type="number"
@@ -166,7 +166,7 @@ const ProductList = () => {
       </div>
 
       {/* list */}
-      {searchTopSelling.length > 0 ? (
+      {searchTopSelling? (
         <div className="relative overflow-x-auto rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">

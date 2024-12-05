@@ -158,12 +158,12 @@ const Customer = () => {
       <div className="text-[17px] font-medium">
         Search customers with highest order amount
       </div>
-
-      <div className="flex gap-x-4 my-6 w-[500px]">
+      {/* w-[500px] */}
+      <div className="flex gap-x-4 my-6 w-[900px]">
         <input
           type="number"
-          placeholder="Enter Number"
-          className="border p-2 rounded-lg w-[150px]"
+          placeholder="Enter the number of customers"
+          className="border p-2 rounded-lg w-[400px]"
           value={number}
           onChange={(e) => setNumber(e.target.value)}
         />

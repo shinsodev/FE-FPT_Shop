@@ -310,7 +310,10 @@ const Employee = () => {
                 Supervise Date
               </th>
               <th scope="col" className="px-6 py-3">
-                store Id
+                Store Id
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Store Name
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -336,6 +339,7 @@ const Employee = () => {
                   <td className="px-6 py-4">{user.supervisor?.employeeId}</td>
                   <td className="px-6 py-4">{user.superviseDate}</td>
                   <td className="px-6 py-4">{user.store?.storeId}</td>
+                  <td className="px-6 py-4">{user.store?.storeName}</td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex items-center gap-3">
                       <button

@@ -54,7 +54,7 @@ export async function getStoreById(id) {
 export async function updateStore(currStore, id) {
   try {
     const result = await axios.put(
-      `http://localhost:8080/api/store/${id}`,
+      `http://localhost:8080/api/stores/${id}`,
       currStore
     );
 

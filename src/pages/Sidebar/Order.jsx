@@ -14,7 +14,7 @@ import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 
 const Order = () => {
-  const [orderList, setOrderList] = useState([]);
+  const [orderList, setOrderList] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showAddPLModal, setShowAddPLModal] = useState(false);
   const [showDeletePLModal, setShowDeletePLModal] = useState(false);
@@ -149,6 +149,7 @@ const Order = () => {
         price: "",
         quantity: "",
       });
+      handleSearch();
       fetchOrders();
       setShowAddPLModal(false);
       toast.success(result.data);
@@ -188,7 +189,7 @@ const Order = () => {
   };
 
   const handleReset = () => {
-    setSearchOrderByTime([]);
+    setSearchOrderByTime(null);
     setStartDate("");
     setEndDate("");
     fetchOrders();
@@ -256,7 +257,7 @@ const Order = () => {
       </div>
 
       {/* Order List */}
-      {searchOrderByTime.length > 0 ? (
+      {searchOrderByTime ? (
         <div className="relative overflow-x-auto rounded-lg min-h-screen">
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
@@ -381,11 +382,11 @@ const Order = () => {
                   >
                     <td className="px-6 py-4">{item.orderId}</td>
 
-                    <td className="px-6 py-4">{item.customer.customerId}</td>
+                    <td className="px-6 py-4">{item.customer?.customerId}</td>
                     <td className="px-6 py-4">{item.customer.fname}</td>
                     <td className="px-6 py-4">{item.customer.lname}</td>
                     <td className="px-6 py-4">{item.customer.email}</td>
-                    <td className="px-6 py-4">{item.employee.employeeId}</td>
+                    <td className="px-6 py-4">{item.employee?.employeeId}</td>
                     <td className="px-6 py-4">{item.orderDate}</td>
                     {/* <td className="px-6 py-4">{item.orderStatus}</td> */}
                     <td className="px-6 py-4">{item.totalAmount}</td>

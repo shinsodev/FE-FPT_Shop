@@ -173,7 +173,7 @@ const Store = () => {
             <h3 className="text-xl font-medium mb-4">Add New Store</h3>
             <div className="grid gap-4">
               {[
-                "storeId",
+             
                 "numberOfEmployees",
                 "area",
                 "storeName",
