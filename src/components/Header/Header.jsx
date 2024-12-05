@@ -33,7 +33,7 @@ const Header = () => {
         </div>
 
         <div className="flex space-x-2 items-center justify-center">
-          <NavLink to="/dashboard">
+          <NavLink to="/admin/userlist">
             <FaUser size={40} className="bg-red-900 p-2 rounded-full" />
           </NavLink>
 

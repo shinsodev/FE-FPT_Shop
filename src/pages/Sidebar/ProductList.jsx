@@ -11,7 +11,7 @@ import {
 const ProductList = () => {
   const [productList, setProductList] = useState([]);
   const [searchTotalSales, setSearchTotalSales] = useState("");
-  const [searchTopSelling, setSearchTopSelling] = useState([]);
+  const [searchTopSelling, setSearchTopSelling] = useState(null);
 
   const [searchProductLineId, setSearchProductLineId] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -132,7 +132,9 @@ const ProductList = () => {
       )}
 
       {/* Get top selling products */}
-      <div className="text-[17px] font-medium">Get products that met KPIs for the day</div>
+      <div className="text-[17px] font-medium">
+        Get products that met KPIs for the day
+      </div>
       <div className="flex gap-x-4 my-4 w-[500px]">
         <input
           type="number"
@@ -166,7 +168,7 @@ const ProductList = () => {
       </div>
 
       {/* list */}
-      {searchTopSelling? (
+      {searchTopSelling ? (
         <div className="relative overflow-x-auto rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">

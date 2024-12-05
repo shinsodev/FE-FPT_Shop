@@ -12,17 +12,20 @@ import { getOrdersByTime } from "../../services/OrderServices";
 import { toast } from "react-toastify";
 import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
+import { MdDeleteForever } from "react-icons/md";
 
 const Order = () => {
-  const [orderList, setOrderList] = useState(null);
+  const [orderList, setOrderList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showAddPLModal, setShowAddPLModal] = useState(false);
   const [showDeletePLModal, setShowDeletePLModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [chooseOrder, setChooseOrder] = useState(null);
-  const [searchOrderByTime, setSearchOrderByTime] = useState([]);
+  const [searchOrderByTime, setSearchOrderByTime] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [idAddPL, setIdAddPL] = useState("");
+  const [idDeletePL, setIdDeletePL] = useState("");
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   //   const [statusOrder, setStatusOrder] = useState("");
@@ -90,6 +93,9 @@ const Order = () => {
         deliveryId: "",
       });
       fetchOrders();
+      if (startDate && endDate) {
+        handleSearch();
+      }
       setShowModal(false);
       toast.success(result.data);
     } catch (error) {
@@ -104,6 +110,9 @@ const Order = () => {
       setDeleteID(null);
       setShowDeleteModal(false);
       fetchOrders();
+      if (startDate && endDate) {
+        handleSearch();
+      }
       toast.success(result.data);
     } catch (error) {
       console.error("Error deleting order:", error);
@@ -117,7 +126,9 @@ const Order = () => {
       const result = await updateStatusOrder(updatedOrder, orderId);
       toast.success(`Order status updated to ${newStatus}`);
       fetchOrders(); // Refresh the list after status change
-      handleSearch();
+      if (startDate && endDate) {
+        handleSearch();
+      }
       setIsMenuVisible(false);
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -135,6 +146,9 @@ const Order = () => {
 
     setCurrOrder(null);
     fetchOrders();
+    if (startDate && endDate) {
+      handleSearch();
+    }
     setShowUpdateModal(false);
     toast.success(result.data);
   };
@@ -149,8 +163,11 @@ const Order = () => {
         price: "",
         quantity: "",
       });
-      handleSearch();
+
       fetchOrders();
+      if (startDate && endDate) {
+        handleSearch();
+      }
       setShowAddPLModal(false);
       toast.success(result.data);
     } catch (error) {
@@ -170,6 +187,9 @@ const Order = () => {
         productLineId: "",
       });
       fetchOrders();
+      if (startDate && endDate) {
+        handleSearch();
+      }
       setShowDeletePLModal(false);
       toast.success(result.data);
     } catch (error) {
@@ -200,7 +220,7 @@ const Order = () => {
       <div className="flex justify-between items-center">
         <h2 className="font-medium text-3xl">ORDER LIST</h2>
         <div>
-          <button
+          {/* <button
             className="px-4 py-2 bg-green-700 text-white rounded-lg"
             onClick={() => setShowAddPLModal(true)}
           >
@@ -211,7 +231,7 @@ const Order = () => {
             onClick={() => setShowDeletePLModal(true)}
           >
             Delete Product Line
-          </button>
+          </button> */}
           <button
             className="ml-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
             onClick={() => setShowModal(true)}
@@ -335,6 +355,33 @@ const Order = () => {
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => {
+                            setIdAddPL(item.OrderID);
+                            setAddProductLine({
+                              ...addProductLine,
+                              orderId: item.OrderID,
+                            });
+                            setShowAddPLModal(true);
+                          }}
+                          className="text-green-500"
+                        >
+                          <IoIosAddCircle size={20} />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setIdDeletePL(item.OrderID);
+                            setDeleteProductLine({
+                              ...deleteProductLine,
+                              orderId: item.OrderID,
+                            });
+                            setShowDeletePLModal(true);
+                          }}
+                          className="text-red-700"
+                        >
+                          <MdDeleteForever size={22} />
+                        </button>
+                        <button
+                          onClick={() => {
                             setDeleteID(item.OrderID);
                             setShowDeleteModal(true);
                           }}
@@ -435,12 +482,33 @@ const Order = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center gap-3">
-                        {/* <button
-                        onClick={() => handleChooseUpdate(item)}
-                        className="text-green-500"
-                      >
-                        <FaEdit size={20} />
-                      </button> */}
+                        <button
+                          onClick={() => {
+                            setIdAddPL(item.orderId);
+                            setAddProductLine({
+                              ...addProductLine,
+                              orderId: item.orderId,
+                            });
+                            setShowAddPLModal(true);
+                          }}
+                          className="text-green-500"
+                        >
+                          <IoIosAddCircle size={20} />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setIdDeletePL(item.orderId);
+                            setDeleteProductLine({
+                              ...deleteProductLine,
+                              orderId: item.orderId,
+                            });
+                            setShowDeletePLModal(true);
+                          }}
+                          className="text-red-700"
+                        >
+                          <MdDeleteForever size={22} />
+                        </button>
 
                         {/* <button
                         onClick={() => {
@@ -606,13 +674,8 @@ const Order = () => {
                 <label className="block font-medium mb-1">Order ID</label>
                 <input
                   type="text"
-                  value={addProductLine.orderId}
-                  onChange={(e) =>
-                    setAddProductLine({
-                      ...addProductLine,
-                      orderId: e.target.value,
-                    })
-                  }
+                  value={idAddPL}
+                  disabled
                   className="border p-2 rounded-lg w-full"
                 />
               </div>
@@ -693,13 +756,8 @@ const Order = () => {
                 <label className="block font-medium mb-1">Order ID</label>
                 <input
                   type="text"
-                  value={deleteProductLine.orderId}
-                  onChange={(e) =>
-                    setDeleteProductLine({
-                      ...deleteProductLine,
-                      orderId: e.target.value,
-                    })
-                  }
+                  value={idDeletePL}
+                  disabled
                   className="border p-2 rounded-lg w-full"
                 />
               </div>
