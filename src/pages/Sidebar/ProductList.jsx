@@ -124,7 +124,7 @@ const ProductList = () => {
         </button>
       </div>
 
-      {searchTotalSales && (
+      {searchTotalSales >= 0 && (
         <div className="text-[17px] font-medium mb-4 text-green-700">
           Total sales of a product line ID {searchProductLineId}:{" "}
           {searchTotalSales}
